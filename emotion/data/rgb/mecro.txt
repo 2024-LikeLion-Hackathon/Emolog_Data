@@ -1,0 +1,37 @@
+Function IsHexColor(hex As String) As Boolean
+       
+    ' Convert the hex string to uppercase
+    hex = UCase(hex)
+    
+    ' Check if string is a valid hexadecimal color code
+    If Len(hex) = 6 Then
+        IsHexColor = True
+        For i = 1 To 6
+            If Not (Mid(hex, i, 1) Like "[0-9A-F]") Then
+                IsHexColor = False
+                Exit Function
+            End If
+        Next i
+    Else
+        IsHexColor = False
+    End If
+End Function
+
+Sub ColorCellsByHex()
+    Dim cell As Range
+    
+    ' Loop through selected cells
+    For Each cell In Selection
+        ' Check if cell contains a valid hexadecimal color code
+        If IsHexColor(cell.Value) Then
+            ' Convert hex to RGB values
+            Dim red As Long, green As Long, blue As Long
+            red = Val("&H" & Mid(cell.Value, 1, 2))
+            green = Val("&H" & Mid(cell.Value, 3, 2))
+            blue = Val("&H" & Mid(cell.Value, 5, 2))
+            
+            ' Apply RGB color to cell
+            cell.Interior.Color = RGB(red, green, blue)
+        End If
+    Next cell
+End Sub
